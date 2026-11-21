@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#090d12" />
+  <title>Top Connect</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- AUTH VIEW -->
+  <section id="auth-screen" class="auth-screen">
+    <div class="auth-card">
+      <div class="brand-pill">⚡ TOP CONNECT</div>
+      <h1>Your World. Your Vibe.</h1>
+      <p class="auth-sub">Local test mode • Open two tabs with different accounts to test live chat, blue ticks & calls.</p>
+
+      <div class="auth-switch">
+        <button type="button" id="tab-login" class="active">Sign In</button>
+        <button type="button" id="tab-signup">Sign Up</button>
+      </div>
+
+      <form id="login-form">
+        <input type="text" id="login-user" placeholder="Username (e.g. kwame)" required />
+        <input type="password" id="login-pass" placeholder="Password" required />
+        <button type="submit" class="btn-main">Continue to Top Connect</button>
+      </form>
+
+      <form id="signup-form" class="hidden">
+        <input type="text" id="reg-name" placeholder="Full Name" required />
+        <input type="text" id="reg-user" placeholder="Username" required />
+        <input type="text" id="reg-city" placeholder="City (e.g. Accra, Kumasi, Takoradi)" required />
+        <input type="password" id="reg-pass" placeholder="Password" required />
+        <button type="submit" class="btn-main">Create Account</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- MOBILE-FIRST APP SHELL -->
+  <div id="app-shell" class="app-shell hidden">
+    <!-- Top App Bar -->
+    <header class="app-header">
+      <div class="header-brand">
+        <span class="brand-logo">Top Connect</span>
+        <span id="header-user-tag" class="user-handle"></span>
+      </div>
+      <div class="header-right">
+        <button type="button" id="saver-btn" class="chip-btn">📶 Saver: OFF</button>
+        <span id="wallet-chip" class="wallet-chip">₵0.00</span>
+        <button type="button" id="logout-btn" class="chip-btn danger">Log Out</button>
+      </div>
+    </header>
+
+    <!-- Scrollable Screen Area -->
+    <main id="screen-container" class="screen-container">
+      <!-- FEED SCREEN -->
+      <div id="screen-feed" class="screen active">
+        <!-- Stories Strip -->
+        <div class="stories-section">
+          <label class="story-card add-story">
+            <div class="story-avatar">+</div>
+            <span>Post Story</span>
+            <input type="file" id="story-upload" accept="image/*,video/*" hidden />
+          </label>
+          <div id="stories-strip" class="stories-strip"></div>
+        </div>
+
+        <!-- Composer Card -->
+        <div class="surface-card composer-card">
+          <textarea id="feed-caption" rows="2" placeholder="Share a photo, video, gist, or update on Top Connect..."></textarea>
+          <div class="composer-row">
+            <div class="composer-tools">
+              <label class="tool-btn">
+                📸 Photo/Video
+                <input type="file" id="feed-media" accept="image/*,video/*" hidden />
+              </label>
+              <select id="feed-tag">
+                <option value="Gist">💬 Gist</option>
+                <option value="Vibes">🔥 Vibes</option>
+                <option value="Hustle">💼 Hustle</option>
+                <option value="Pidgin">🗣️ Pidgin</option>
+                <option value="Twi">🇬🇭 Twi</option>
+              </select>
+            </div>
+            <button type="button" id="post-btn" class="btn-main small-btn">Publish</button>
+          </div>
+          <div id="feed-preview" class="media-preview hidden"></div>
+        </div>
+
+        <!-- Filter & AI News Bar -->
+        <div id="feed-filters" class="filter-scroll">
+          <button type="button" class="filter-pill active" data-tag="ALL">All</button>
+          <button type="button" class="filter-pill" data-tag="Vibes">Vibes</button>
+          <button type="button" class="filter-pill" data-tag="Gist">Gist</button>
+          <button type="button" class="filter-pill" data-tag="Hustle">Hustle</button>
+          <button type="button" class="filter-pill" data-tag="Pidgin">Pidgin</button>
+          <button type="button" class="filter-pill" data-tag="Twi">Twi</button>
+          <button type="button" id="ai-auto-news-btn" class="filter-pill">⚡ AI Auto-News</button>
+        </div>
+
+        <!-- Posts List -->
+        <div id="posts-feed"></div>
+      </div>
+
+      <!-- VIBES SCREEN -->
+      <div id="screen-vibes" class="screen">
+        <div class="vibes-banner">
+          <h2>🎬 Top Vibes</h2>
+          <p>Short clips, visuals & trending moments</p>
+        </div>
+        <div id="vibes-stream" class="vibes-stream"></div>
+      </div>
+
+      <!-- FRIENDS SCREEN -->
+      <div id="screen-friends" class="screen">
+        <div class="surface-card">
+          <h3>Friend Requests</h3>
+          <div id="requests-list"></div>
+        </div>
+        <div class="surface-card">
+          <h3>Friends</h3>
+          <div id="friends-list"></div>
+        </div>
+        <div class="surface-card">
+          <h3>People You May Know</h3>
+          <div id="suggestions-list"></div>
+        </div>
+      </div>
+
+      <!-- CHAT SCREEN -->
+      <div id="screen-chat" class="screen chat-screen">
+        <div id="chat-list-pane" class="chat-list-pane">
+          <div class="pane-title">Chats</div>
+          <div id="chat-threads-list"></div>
+        </div>
+
+        <div id="chat-room-pane" class="chat-room-pane hidden">
+          <div class="chat-room-head">
+            <button type="button" id="back-to-chats" class="icon-btn">←</button>
+            <div class="chat-peer-info">
+              <strong id="room-peer-name"></strong>
+              <span id="room-peer-sub"></span>
+            </div>
+            <div class="room-call-btns">
+              <button type="button" id="btn-voice-call" class="icon-btn">📞</button>
+              <button type="button" id="btn-video-call" class="icon-btn">📹</button>
+            </div>
+          </div>
+
+          <div id="room-messages" class="room-messages"></div>
+
+          <form id="room-form" class="room-composer">
+            <label class="icon-btn">
+              📎
+              <input type="file" id="room-media" accept="image/*,video/*" hidden />
+            </label>
+            <input type="text" id="room-input" placeholder="Message..." autocomplete="off" />
+            <button type="submit" class="btn-send">Send</button>
+            <button type="button" id="voice-note-btn" class="icon-btn" title="Record Voice Note">🎤</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- PROFILE SCREEN -->
+      <div id="screen-profile" class="screen">
+        <div id="profile-card" class="surface-card"></div>
+        <div class="surface-card">
+          <h3>Friends</h3>
+          <div id="profile-friends-list"></div>
+        </div>
+        <div id="profile-posts-list"></div>
+      </div>
+
+      <!-- SETTINGS SCREEN -->
+      <div id="screen-settings" class="screen">
+        <div class="surface-card">
+          <h2>Settings & Privacy</h2>
+          <label class="field-label">
+            Display Name
+            <input type="text" id="cfg-name" />
+          </label>
+          <label class="field-label">
+            City
+            <input type="text" id="cfg-city" />
+          </label>
+          <label class="field-label">
+            Bio
+            <textarea id="cfg-bio" rows="2"></textarea>
+          </label>
+          <label class="field-label">
+            Profile Picture
+            <input type="file" id="cfg-avatar-file" accept="image/*" />
+          </label>
+          <label class="field-label">
+            App Background Style
+            <select id="cfg-app-bg">
+              <option value="default">Default Dark</option>
+              <option value="midnight">Midnight Ocean</option>
+              <option value="sunset">Sunset Vibe</option>
+              <option value="custom">Custom Uploaded Image</option>
+            </select>
+          </label>
+          <label class="field-label">
+            Upload Custom App Background
+            <input type="file" id="cfg-app-bg-file" accept="image/*" />
+          </label>
+          <label class="field-label">
+            Chat Background Style
+            <select id="cfg-chat-bg">
+              <option value="default">Default Chat</option>
+              <option value="emerald">Emerald Night</option>
+              <option value="warm">Warm Dusk</option>
+              <option value="custom">Custom Chat Wallpaper</option>
+            </select>
+          </label>
+          <label class="field-label">
+            Upload Custom Chat Wallpaper
+            <input type="file" id="cfg-chat-bg-file" accept="image/*" />
+          </label>
+          <label class="switch-row">
+            <input type="checkbox" id="cfg-blue-ticks" checked />
+            <span>Read Receipts (Blue double ticks ✓✓ when you read messages)</span>
+          </label>
+          <label class="switch-row">
+            <input type="checkbox" id="cfg-dark" checked />
+            <span>Dark Mode</span>
+          </label>
+          <div class="settings-btns">
+            <button type="button" id="save-cfg-btn" class="btn-main small-btn">Save Settings</button>
+            <button type="button" id="reset-db-btn" class="btn-danger-outline">Reset Local Data</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Bottom App Navigation Bar -->
+    <nav class="bottom-nav">
+      <button type="button" class="tab-btn active" data-screen="screen-feed">
+        <span class="tab-ico">🏠</span>
+        <span>Feed</span>
+      </button>
+      <button type="button" class="tab-btn" data-screen="screen-vibes">
+        <span class="tab-ico">🎬</span>
+        <span>Vibes</span>
+      </button>
+      <button type="button" class="tab-btn" data-screen="screen-friends">
+        <span class="tab-ico">👥</span>
+        <span>Friends</span>
+        <span id="nav-req-dot" class="dot-badge hidden">0</span>
+      </button>
+      <button type="button" class="tab-btn" data-screen="screen-chat">
+        <span class="tab-ico">💬</span>
+        <span>Chat</span>
+        <span id="nav-msg-dot" class="dot-badge hidden">0</span>
+      </button>
+      <button type="button" class="tab-btn" data-screen="screen-profile">
+        <span class="tab-ico">👤</span>
+        <span>Profile</span>
+      </button>
+      <button type="button" class="tab-btn" data-screen="screen-settings">
+        <span class="tab-ico">⚙️</span>
+        <span>Settings</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- FULL-SCREEN STORY VIEWER -->
+  <div id="story-modal" class="fullscreen-modal hidden">
+    <div class="story-progress-wrap">
+      <div id="story-progress-bar" class="story-progress-bar"></div>
+    </div>
+    <div class="story-top-bar">
+      <div>
+        <strong id="story-author-name"></strong>
+        <span id="story-time-ago" class="story-time"></span>
+      </div>
+      <button type="button" id="close-story-btn" class="circle-close">✕</button>
+    </div>
+    <div id="story-stage" class="story-stage"></div>
+    <div class="story-nav-zones">
+      <div id="story-prev-zone" class="story-zone"></div>
+      <div id="story-next-zone" class="story-zone"></div>
+    </div>
+  </div>
+
+  <!-- VOICE / VIDEO CALL MODAL -->
+  <div id="call-modal" class="fullscreen-modal call-modal hidden">
+    <div class="call-card">
+      <div id="call-badge" class="call-badge">📹 Video Call</div>
+      <h2 id="call-target">Connecting...</h2>
+      <p id="call-status-msg">Ringing...</p>
+      <div class="call-videos">
+        <video id="remote-stream-video" autoplay playsinline></video>
+        <video id="local-stream-video" autoplay muted playsinline></video>
+      </div>
+      <div class="call-actions-bar">
+        <button type="button" id="answer-call-btn" class="btn-answer hidden">Answer</button>
+        <button type="button" id="mute-audio-btn" class="btn-ghost">🎙️ Mute</button>
+        <button type="button" id="hangup-call-btn" class="btn-hangup">End</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="db.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
